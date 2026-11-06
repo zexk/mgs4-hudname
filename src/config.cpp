@@ -29,6 +29,29 @@ bool truthy(std::string v)
     return v == "1" || v == "true" || v == "yes" || v == "on";
 }
 
+// The loader's setter expands backslash escapes and skips a fixed width after
+// \x without checking for the terminator, so a backslash could make it read
+// past the string. The HUD font covers printable ASCII; the life bar fits
+// about 15 characters.
+constexpr size_t kMaxText = 32;
+
+bool valid_text(const char* key, const std::string& v)
+{
+    if (v.empty() || v.size() > kMaxText) {
+        LOG_ERROR("config: %s must be 1-%u characters, got %u", key,
+                  static_cast<unsigned>(kMaxText), static_cast<unsigned>(v.size()));
+        return false;
+    }
+    for (const unsigned char c : v) {
+        if (c < 0x20 || c > 0x7E || c == '\\') {
+            LOG_ERROR("config: %s has unsupported character 0x%02X (printable ASCII, no "
+                      "backslash)", key, c);
+            return false;
+        }
+    }
+    return true;
+}
+
 } // namespace
 
 const Config& config()
@@ -68,6 +91,12 @@ void config_load(const char* path)
         }
     }
     fclose(file);
+    if (!valid_text("match", g_config.match) || !valid_text("name", g_config.name)) {
+        g_config.enabled = false;
+    } else if (g_config.name.size() > 15) {
+        LOG_WARN("config: name is %u characters, may overflow the life bar",
+                 static_cast<unsigned>(g_config.name.size()));
+    }
     LOG_INFO("config loaded: enabled=%d verbose=%d match='%s' name='%s'", g_config.enabled,
              g_config.verbose, g_config.match.c_str(), g_config.name.c_str());
 }

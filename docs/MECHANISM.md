@@ -44,6 +44,19 @@ sized for the new string, so the replacement is not bound by the record's
 size; the life bar fits about 15 characters on screen. The swap happens once
 per layout load, with no per-frame cost.
 
+Only one other layout carries the string: the options screen's "DISPLAY /
+Life / Psyche Gauge" preview (`ww/stage/slot/00003ad4/cache/0090329a.la2`,
+two nodes), which loads the same way and shows the new name too. The
+stage scripts (`00180720.gcx` in every stage) hold one "OLD SNAKE" string
+resource each; what uses it is not known. The retro HUDs of the final
+Act 5 fight label the bar LIFE or SNAKE, so the hook leaves them alone.
+
+`name` and `match` must be 1 to 32 printable ASCII characters with no
+backslash; otherwise the mod logs an error and installs nothing. The
+backslash rule matters: `0x30FCA0` skips four bytes after `\x` without
+looking for the terminator, so a `name` ending in `\x` would make it read
+past the string.
+
 Each hook site carries its expected prologue bytes. Install waits for the
 decrypted `.text` to match them and enables both hooks or neither, so on any
 other build the mod logs an error and changes nothing.
