@@ -26,9 +26,10 @@ jobs:
           VERSION: ${{ github.ref_name }}
         run: |
           mkdir dist
-          cp result/hudname.asi result/hudname.ini README.md dist/
+          cp result/hudname.asi result/hudname.ini result/MinHook-LICENSE.txt README.md LICENSE dist/
           cd dist
-          python3 -m zipfile -c "hudname-${VERSION}.zip" hudname.asi hudname.ini README.md
+          python3 -m zipfile -c "hudname-${VERSION}.zip" \
+            hudname.asi hudname.ini README.md LICENSE MinHook-LICENSE.txt
 
       - name: Publish release
         uses: softprops/action-gh-release@v3

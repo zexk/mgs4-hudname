@@ -34,3 +34,7 @@ nix build      # result/hudname.asi + result/hudname.ini
 ```
 
 Needs Ultimate ASI Loader (`winmm.dll`) in the game directory.
+
+## License
+
+MIT, see `LICENSE`. Releases bundle MinHook (BSD 2-Clause, `MinHook-LICENSE.txt`).

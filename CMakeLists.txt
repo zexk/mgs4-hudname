@@ -55,3 +55,4 @@ target_compile_definitions(hudname PRIVATE MOD_NAME="${PROJECT_NAME}" MOD_VERSIO
 
 install(TARGETS hudname RUNTIME DESTINATION .)
 install(FILES hudname.ini DESTINATION .)
+install(FILES ${MINHOOK_DIR}/LICENSE.txt DESTINATION . RENAME MinHook-LICENSE.txt)
